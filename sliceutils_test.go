@@ -172,13 +172,28 @@ func TestReduce(t *testing.T) {
 		sum := Reduce(numbers, 0, func(acc, next int) int {
 			return acc + next
 		})
-		assert.Equal(t, 1+2+3+4+5+6, sum)
+		assert.Equal(t, 0+1+2+3+4+5+6, sum)
 
 		factorial := Reduce(numbers, 1, func(acc, next int) int {
 			return acc * next
 		})
-		assert.Equal(t, 1*2*3*4*5*6, factorial)
+		assert.Equal(t, 1*1*2*3*4*5*6, factorial)
 	})
+
+	t.Run("Return initial value on nil slice", func(t *testing.T) {
+		var slice []int = nil
+
+		reduced := Reduce(slice, 0, func(acc, next int) int {
+			return acc + next
+		})
+		assert.Equal(t, 0, reduced)
+
+		reduced2 := Reduce(slice, 42, func(acc, next int) int {
+			return acc + next
+		})
+		assert.Equal(t, 42, reduced2)
+	})
+
 }
 
 func TestReverse(t *testing.T) {
