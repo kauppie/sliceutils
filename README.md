@@ -28,9 +28,9 @@ Function folds a slice into a single value. Other name for such a function is *r
 
 It starts with a initial value and updates it iteratively using the argument function and slice's elements to accumulate the final result.
 
-### >> *Frequency*
+### >> *Frequencies*
 
-Function counts the number of occurrences for each unique element.
+Function counts the number of occurrences for each unique element. Requires slice elements to be `comparable`.
 
 ### >> *IsSortedBy*
 

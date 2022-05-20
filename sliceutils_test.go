@@ -81,10 +81,10 @@ func TestFlatten(t *testing.T) {
 	})
 }
 
-func TestFrequency(t *testing.T) {
-	t.Run("Count integer frequency", func(t *testing.T) {
+func TestFrequencies(t *testing.T) {
+	t.Run("Count integer frequencies", func(t *testing.T) {
 		slice := []int{1, 2, 3, 4, 0, 1, 4, 0, 0, 12, 3, 5, 7, 1}
-		frequencies := Frequency(slice)
+		frequencies := Frequencies(slice)
 		assert.Equal(t, map[int]int{
 			1:  3,
 			2:  1,
@@ -100,7 +100,7 @@ func TestFrequency(t *testing.T) {
 
 	t.Run("Empty map on empty slice", func(t *testing.T) {
 		slice := []int{}
-		frequencies := Frequency(slice)
+		frequencies := Frequencies(slice)
 		assert.Equal(t, map[int]int{}, frequencies)
 	})
 }

@@ -84,7 +84,7 @@ func Fold[T, U any](slice []T, init U, foldFn func(U, T) U) U {
 // values as keys and their number of occurrences as values.
 //
 // Returns nil on nil slice.
-func Frequency[T comparable](slice []T) map[T]int {
+func Frequencies[T comparable](slice []T) map[T]int {
 	// Preserve nil.
 	if slice == nil {
 		return nil
