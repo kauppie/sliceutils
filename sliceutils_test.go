@@ -65,6 +65,12 @@ func TestFilterMap(t *testing.T) {
 		})
 		assert.Equal(t, []int{3, 3, 3, 1}, filterMapped)
 	})
+
+	t.Run("Return nil on nil slice", func(t *testing.T) {
+		var slice []int = nil
+		filterMapped := FilterMap(slice, func(i int) (int, bool) { return i, i > 0 })
+		assert.Nil(t, filterMapped)
+	})
 }
 
 func TestFlatten(t *testing.T) {
@@ -102,6 +108,12 @@ func TestFrequencies(t *testing.T) {
 		slice := []int{}
 		frequencies := Frequencies(slice)
 		assert.Equal(t, map[int]int{}, frequencies)
+	})
+
+	t.Run("Return nil on nil slice", func(t *testing.T) {
+		var slice []int = nil
+		frequencies := Frequencies(slice)
+		assert.Nil(t, frequencies)
 	})
 }
 
