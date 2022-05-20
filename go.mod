@@ -1,4 +1,4 @@
-module sliceutils
+module github.com/kauppie/sliceutils
 
 go 1.18
 
