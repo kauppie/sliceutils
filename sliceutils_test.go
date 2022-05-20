@@ -165,16 +165,16 @@ func TestPartition(t *testing.T) {
 	})
 }
 
-func TestReduce(t *testing.T) {
+func TestFold(t *testing.T) {
 	t.Run("Calculate sum and factorial", func(t *testing.T) {
 		numbers := []int{1, 2, 3, 4, 5, 6}
 
-		sum := Reduce(numbers, 0, func(acc, next int) int {
+		sum := Fold(numbers, 0, func(acc, next int) int {
 			return acc + next
 		})
 		assert.Equal(t, 0+1+2+3+4+5+6, sum)
 
-		factorial := Reduce(numbers, 1, func(acc, next int) int {
+		factorial := Fold(numbers, 1, func(acc, next int) int {
 			return acc * next
 		})
 		assert.Equal(t, 1*1*2*3*4*5*6, factorial)
@@ -183,15 +183,15 @@ func TestReduce(t *testing.T) {
 	t.Run("Return initial value on nil slice", func(t *testing.T) {
 		var slice []int = nil
 
-		reduced := Reduce(slice, 0, func(acc, next int) int {
+		folded := Fold(slice, 0, func(acc, next int) int {
 			return acc + next
 		})
-		assert.Equal(t, 0, reduced)
+		assert.Equal(t, 0, folded)
 
-		reduced2 := Reduce(slice, 42, func(acc, next int) int {
+		folded2 := Fold(slice, 42, func(acc, next int) int {
 			return acc + next
 		})
-		assert.Equal(t, 42, reduced2)
+		assert.Equal(t, 42, folded2)
 	})
 
 }

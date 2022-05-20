@@ -141,14 +141,14 @@ func Partition[T any](slice []T, partFn func(T) bool) ([]T, []T) {
 	return trueSlice, falseSlice
 }
 
-// Reduces a slice successively into a single value. init is the initial value
-// for which the reducer function is applied. Reducer function takes the current
-// reduced value and the next slice value and returns the reduced value.
+// Folds a slice successively into single value. `init` is the initial value
+// for which the fold function is applied. Fold function takes the current
+// folded value and the next slice value and returns the folded value.
 //
-// Return initial value on nil slice. Panics on nil reducer function.
-func Reduce[T, U any](slice []T, init U, reducerFn func(U, T) U) U {
+// Return initial value on nil slice. Panics on nil fold function.
+func Fold[T, U any](slice []T, init U, foldFn func(U, T) U) U {
 	for _, val := range slice {
-		init = reducerFn(init, val)
+		init = foldFn(init, val)
 	}
 	return init
 }
