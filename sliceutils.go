@@ -68,6 +68,18 @@ func Flatten[T any](slice [][]T) []T {
 	return outSlice
 }
 
+// Folds a slice successively into single value. `init` is the initial value
+// for which the fold function is applied. Fold function takes the current
+// folded value and the next slice value and returns the folded value.
+//
+// Return initial value on nil slice. Panics on nil fold function.
+func Fold[T, U any](slice []T, init U, foldFn func(U, T) U) U {
+	for _, val := range slice {
+		init = foldFn(init, val)
+	}
+	return init
+}
+
 // Returns the frequency of values in a slice. Resulting map contains the found
 // values as keys and their number of occurrences as values.
 //
@@ -139,18 +151,6 @@ func Partition[T any](slice []T, partFn func(T) bool) ([]T, []T) {
 		}
 	}
 	return trueSlice, falseSlice
-}
-
-// Folds a slice successively into single value. `init` is the initial value
-// for which the fold function is applied. Fold function takes the current
-// folded value and the next slice value and returns the folded value.
-//
-// Return initial value on nil slice. Panics on nil fold function.
-func Fold[T, U any](slice []T, init U, foldFn func(U, T) U) U {
-	for _, val := range slice {
-		init = foldFn(init, val)
-	}
-	return init
 }
 
 // Reverses the order of elements in a slice.
