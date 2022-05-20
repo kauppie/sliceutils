@@ -91,6 +91,8 @@ func Frequency[T comparable](slice []T) map[T]int {
 // Returns true if the slice is sorted by given comparison function. For
 // ascending order, pass a comparison function which returns true when left is
 // less than right.
+//
+// Returns true on nil slice. Panics on nil comparison function.
 func IsSortedBy[T any](slice []T, compFn func(T, T) bool) bool {
 	for i := 1; i < len(slice); i++ {
 		if compFn(slice[i], slice[i-1]) {
@@ -142,7 +144,7 @@ func Partition[T any](slice []T, partFn func(T) bool) ([]T, []T) {
 // for which the reducer function is applied. Reducer function takes the current
 // reduced value and the next slice value and returns the reduced value.
 //
-// Return initial value for nil slices. Panics on nil reducer function.
+// Return initial value on nil slice. Panics on nil reducer function.
 func Reduce[T, U any](slice []T, init U, reducerFn func(U, T) U) U {
 	for _, val := range slice {
 		init = reducerFn(init, val)
