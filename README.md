@@ -1,4 +1,9 @@
-# ***Slice Utility Functions***
+# ***SliceUtils | Slice Utility Functions***
+
+[![CI status](https://github.com/kauppie/sliceutils/actions/workflows/go.yml/badge.svg?branch=main)](https://github.com/kauppie/sliceutils/actions/workflows/go.yml)
+[![Go Report Card](https://goreportcard.com/badge/github.com/kauppie/sliceutils)](https://goreportcard.com/report/github.com/kauppie/sliceutils)
+[![codecov](https://codecov.io/gh/kauppie/sliceutils/branch/main/graph/badge.svg)](https://codecov.io/gh/kauppie/sliceutils)
+[![MIT](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/kauppie/sliceutils/blob/main/LICENSE)
 
 This library implements several high-level functions useful for interacting with slices. It reduces boilerplate required by for-loops and variable initializations. 
 
