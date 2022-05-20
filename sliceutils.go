@@ -102,7 +102,8 @@ func IsSortedBy[T any](slice []T, compFn func(T, T) bool) bool {
 	return true
 }
 
-// Maps each slice value with mapping function.
+// Maps each slice value with mapping function. Resulting slice contains values
+// returned by the mapping function while preserving order.
 //
 // Returns nil on nil slice. Panics on nil map function.
 func Map[T, U any](slice []T, mapFn func(T) U) []U {
