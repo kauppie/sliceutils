@@ -31,6 +31,10 @@ Function creates a slice where slice elements for which the argument function re
 
 Function filters _and_ maps slice elements to new slice. See [_Filter_](#filter) and [_Map_](#map) for more details. This function exists to allow better performance than using _Filter_ and _Map_ separately.
 
+### >> _FindBy_
+
+Function finds element's index in a slice for which the argument function returns true.
+
 ### >> _Flatten_
 
 Function converts a _N_-dimensional slice into a _N-1_ -dimensional slice.

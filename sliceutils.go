@@ -78,6 +78,19 @@ func FilterMap[T, U any](slice []T, filterMapFn func(T) (U, bool)) []U {
 	return outSlice
 }
 
+// Returns index of the found element and true in a tuple. If element is not
+// found, returns zero and false.
+//
+// Returns zero and false on nil slice. Panics on nil find function.
+func FindBy[T any](slice []T, findFn func(T) bool) (int, bool) {
+	for i, val := range slice {
+		if findFn(val) {
+			return i, true
+		}
+	}
+	return 0, false
+}
+
 // Flattens a N-dimensional slice to a N-1 -dimensional slice. Resulting slice
 // preserves order from the original slice where the first values will be from
 // the first slice.
