@@ -113,6 +113,35 @@ func TestFilterMap(t *testing.T) {
 	})
 }
 
+func TestFindBy(t *testing.T) {
+	t.Run("Try to find and is found", func(t *testing.T) {
+		slice := []int{1, 2, 3, 4, 5, 6, 7, 8}
+		idx, found := FindBy(slice, func(i int) bool {
+			return i == 6
+		})
+		assert.Equal(t, 5, idx)
+		assert.True(t, found)
+	})
+
+	t.Run("Try to find and is not found", func(t *testing.T) {
+		slice := []int{1, 2, 3, 4, 5, 6, 7, 8}
+		idx, found := FindBy(slice, func(i int) bool {
+			return i == 9
+		})
+		assert.Equal(t, 0, idx)
+		assert.False(t, found)
+	})
+
+	t.Run("Return zero and false on nil slice", func(t *testing.T) {
+		var slice []int = nil
+		idx, found := FindBy(slice, func(i int) bool {
+			return i == 0
+		})
+		assert.Equal(t, 0, idx)
+		assert.False(t, found)
+	})
+}
+
 func TestFlatten(t *testing.T) {
 	t.Run("Flatten integer slice", func(t *testing.T) {
 		slice := [][]int{{1, 2, 3}, {4, 5, 6}, {7, 8}}
