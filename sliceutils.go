@@ -91,11 +91,8 @@ func Frequencies[T comparable](slice []T) map[T]int {
 	}
 	outMap := make(map[T]int)
 	for _, val := range slice {
-		if _, exists := outMap[val]; exists {
-			outMap[val]++
-		} else {
-			outMap[val] = 1
-		}
+		// Missing value returns default which is zero.
+		outMap[val] = outMap[val] + 1
 	}
 	return outMap
 }
