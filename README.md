@@ -41,6 +41,10 @@ Function counts the number of occurrences for each unique element. Requires slic
 
 Function returns true for slices whose elements are sorted according to passed argument function.
 
+### >> *IsSet*
+
+Function returns true for slices that are sets. Requires slice elements to be `comparable`.
+
 ### >> *Map*
 
 Function maps each element through argument function which can modify their type and/or value.

@@ -147,6 +147,26 @@ func TestIsSortedBy(t *testing.T) {
 	})
 }
 
+func TestIsSet(t *testing.T) {
+	t.Run("Is slice with only unique elements a set", func(t *testing.T) {
+		slice := []string{"foo", "bar", "hello", "world", "baz"}
+		isSet := IsSet(slice)
+		assert.True(t, isSet)
+	})
+
+	t.Run("Is slice with repeating elements a set", func(t *testing.T) {
+		slice := []string{"foo", "bar", "baz", "foo", "hello"}
+		isSet := IsSet(slice)
+		assert.False(t, isSet)
+	})
+
+	t.Run("Return true on nil slice", func(t *testing.T) {
+		var slice []string = nil
+		isSet := IsSet(slice)
+		assert.True(t, isSet)
+	})
+}
+
 func TestMap(t *testing.T) {
 	t.Run("Strings to their rune lengths", func(t *testing.T) {
 		slice := []string{"bar", "", "f", "hello", "world"}

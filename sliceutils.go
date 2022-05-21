@@ -111,6 +111,21 @@ func IsSortedBy[T any](slice []T, compFn func(T, T) bool) bool {
 	return true
 }
 
+// Returns true if the slice is a set e.g. contains only unique elements.
+//
+// Returns true on nil slice.
+func IsSet[T comparable](slice []T) bool {
+	uniques := make(map[T]struct{})
+	for _, val := range slice {
+		if _, found := uniques[val]; found {
+			return false
+		} else {
+			uniques[val] = struct{}{}
+		}
+	}
+	return true
+}
+
 // Maps each slice value with mapping function. Resulting slice contains values
 // returned by the mapping function while preserving order.
 //
