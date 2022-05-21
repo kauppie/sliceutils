@@ -52,8 +52,9 @@ func FilterMap[T, U any](slice []T, filterMapFn func(T) (U, bool)) []U {
 	return outSlice
 }
 
-// Flatten a slice of slices into a slice. Resulting slice preserves order
-// from the original slice where the first values will be from the first slice.
+// Flattens a N-dimensional slice to a N-1 -dimensional slice. Resulting slice
+// preserves order from the original slice where the first values will be from
+// the first slice.
 //
 // Returns nil on nil slice.
 func Flatten[T any](slice [][]T) []T {
