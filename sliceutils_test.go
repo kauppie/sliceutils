@@ -6,6 +6,46 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+func TestAll(t *testing.T) {
+	t.Run("All elements evaluate to true", func(t *testing.T) {
+		slice := []int{1, 4, 6, 2, 3, 7}
+		allPositive := All(slice, func(i int) bool { return i > 0 })
+		assert.True(t, allPositive)
+	})
+
+	t.Run("Some elements don't evaluate to true", func(t *testing.T) {
+		slice := []int{1, 4, 6, -2, 3, 7}
+		allPositive := All(slice, func(i int) bool { return i > 0 })
+		assert.False(t, allPositive)
+	})
+
+	t.Run("Return true on nil slice", func(t *testing.T) {
+		var slice []int = nil
+		allPositive := All(slice, func(i int) bool { return i > 0 })
+		assert.True(t, allPositive)
+	})
+}
+
+func TestAny(t *testing.T) {
+	t.Run("Some elements evaluate to true", func(t *testing.T) {
+		slice := []int{-1, -4, 6, -2, 3, 7}
+		anyPositive := Any(slice, func(i int) bool { return i > 0 })
+		assert.True(t, anyPositive)
+	})
+
+	t.Run("All elements evaluate to false", func(t *testing.T) {
+		slice := []int{-1, -4, -6, -2, -3, -7}
+		anyPositive := Any(slice, func(i int) bool { return i > 0 })
+		assert.False(t, anyPositive)
+	})
+
+	t.Run("Return true on nil slice", func(t *testing.T) {
+		var slice []int = nil
+		anyPositive := Any(slice, func(i int) bool { return i > 0 })
+		assert.False(t, anyPositive)
+	})
+}
+
 func TestCount(t *testing.T) {
 	t.Run("Count zeros", func(t *testing.T) {
 		slice := []int{1, 2, 3, 4, 0, 1, 4, 0, 0, 12, 3, 5, 7, 1}
@@ -164,6 +204,30 @@ func TestIsSet(t *testing.T) {
 		var slice []string = nil
 		isSet := IsSet(slice)
 		assert.True(t, isSet)
+	})
+}
+
+func TestJoin(t *testing.T) {
+	t.Run("Join variadics", func(t *testing.T) {
+		slice1 := []int{1, 2, 3}
+		slice2 := []int{4, 5, 6}
+		slice3 := []int{7, 8}
+
+		joined := Join(slice1, slice2, slice3)
+		assert.Equal(t, []int{1, 2, 3, 4, 5, 6, 7, 8}, joined)
+	})
+
+	t.Run("Join two dimensional slice", func(t *testing.T) {
+		slice := [][]int{{1, 2, 3}, {4, 5, 6}, {7, 8}}
+		joined := Join(slice...)
+		assert.Equal(t, []int{1, 2, 3, 4, 5, 6, 7, 8}, joined)
+	})
+
+	t.Run("Return empty slice on nil slices", func(t *testing.T) {
+		var slice []int = nil
+		var slice2 []int = nil
+		joined := Join(slice, slice2)
+		assert.Equal(t, []int{}, joined)
 	})
 }
 
