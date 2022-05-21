@@ -1,5 +1,31 @@
 package sliceutils
 
+// Returns true if all slice elements are evaluated true with given evaluator
+// function.
+//
+// Returns true on nil slice. Panics on nil evaluator function.
+func All[T any](slice []T, allFn func(T) bool) bool {
+	for _, val := range slice {
+		if !allFn(val) {
+			return false
+		}
+	}
+	return true
+}
+
+// Returns true if any slice element is evaluated true with given evaluator
+// function.
+//
+// Returns false on nil slice. Panics on nil evaluator function.
+func Any[T any](slice []T, anyFn func(T) bool) bool {
+	for _, val := range slice {
+		if anyFn(val) {
+			return true
+		}
+	}
+	return false
+}
+
 // Count the number of matching items in a slice. Counter is incremented if
 // counter function returns true on them.
 //
@@ -125,6 +151,16 @@ func IsSet[T comparable](slice []T) bool {
 		}
 	}
 	return true
+}
+
+// Join multiple slices together into a single slice. This is a variadic
+// version of Flatten.
+func Join[T any](slices ...[]T) []T {
+	outSlice := make([]T, 0)
+	for _, slice := range slices {
+		outSlice = append(outSlice, slice...)
+	}
+	return outSlice
 }
 
 // Maps each slice value with mapping function. Resulting slice contains values
