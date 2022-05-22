@@ -279,6 +279,46 @@ func TestMap(t *testing.T) {
 	})
 }
 
+func TestMaxBy(t *testing.T) {
+	t.Run("Return max from slice", func(t *testing.T) {
+		slice := []int{4, 5, 7, 3, 9, -1, 3, 4, 7, 12, 43, 10, 5}
+		max, ok := MaxBy(slice, func(lhs, rhs int) bool {
+			return lhs < rhs
+		})
+		assert.True(t, ok)
+		assert.Equal(t, 43, max)
+	})
+
+	t.Run("Return zero value and false on empty slice", func(t *testing.T) {
+		slice := []int{}
+		max, ok := MaxBy(slice, func(lhs, rhs int) bool {
+			return lhs < rhs
+		})
+		assert.False(t, ok)
+		assert.Zero(t, max)
+	})
+}
+
+func TestMinBy(t *testing.T) {
+	t.Run("Return min from slice", func(t *testing.T) {
+		slice := []int{4, 5, 7, 3, 9, -1, 3, 4, 7, 12, 43, 10, 5}
+		min, ok := MinBy(slice, func(lhs, rhs int) bool {
+			return lhs < rhs
+		})
+		assert.True(t, ok)
+		assert.Equal(t, -1, min)
+	})
+
+	t.Run("Return zero value and false on empty slice", func(t *testing.T) {
+		slice := []int{}
+		min, ok := MinBy(slice, func(lhs, rhs int) bool {
+			return lhs < rhs
+		})
+		assert.False(t, ok)
+		assert.Zero(t, min)
+	})
+}
+
 func TestPartition(t *testing.T) {
 	t.Run("Partition by integer parity", func(t *testing.T) {
 		slice := []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
