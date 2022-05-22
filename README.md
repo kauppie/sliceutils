@@ -65,6 +65,14 @@ Function joins one or more slice together. Similar to [_Flatten_](#flatten) but 
 
 Function maps each element through argument function which can modify their type and/or value.
 
+### >> _MaxBy_
+
+Function returns the maximum element value in a slice using provided comparison function.
+
+### >> _MinBy_
+
+Function returns the minimum element value in a slice using provided comparison function.
+
 ### >> _Partition_
 
 Function partitions slice elements into two separate slices by argument function's boolean return value.

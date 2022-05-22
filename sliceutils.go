@@ -142,9 +142,9 @@ func Frequencies[T comparable](slice []T) map[T]int {
 // less than right.
 //
 // Returns true on nil slice. Panics on nil comparison function.
-func IsSortedBy[T any](slice []T, compFn func(T, T) bool) bool {
+func IsSortedBy[T any](slice []T, lessFn func(T, T) bool) bool {
 	for i := 1; i < len(slice); i++ {
-		if compFn(slice[i], slice[i-1]) {
+		if lessFn(slice[i], slice[i-1]) {
 			return false
 		}
 	}
@@ -199,6 +199,46 @@ func Map[T, U any](slice []T, mapFn func(T) U) []U {
 		outSlice = append(outSlice, mapFn(val))
 	}
 	return outSlice
+}
+
+// Returns the maximum element value and true from non-empty slice using
+// the provided comparison function. To get maximum value, pass a comparison
+// function which returns true when left is less than right. Function is
+// stable, i.e. returns the first occurrence of maximum value.
+//
+// If slice is empty, returns zero value of type T and false.
+func MaxBy[T any](slice []T, lessFn func(T, T) bool) (T, bool) {
+	if len(slice) == 0 {
+		var t T
+		return t, false
+	}
+	max := slice[0]
+	for _, val := range slice[1:] {
+		if lessFn(max, val) {
+			max = val
+		}
+	}
+	return max, true
+}
+
+// Returns the minimum element value and true from non-empty slice using
+// the provided comparison function. To get minimum value, pass a comparison
+// function which returns true when left is less than right. Function is
+// stable, i.e. returns the first occurrence of minimum value.
+//
+// If slice is empty, returns zero value of type T and false.
+func MinBy[T any](slice []T, lessFn func(T, T) bool) (T, bool) {
+	if len(slice) == 0 {
+		var t T
+		return t, false
+	}
+	min := slice[0]
+	for _, val := range slice[1:] {
+		if lessFn(val, min) {
+			min = val
+		}
+	}
+	return min, true
 }
 
 // Partition single slice into two slices using partition function. The first
