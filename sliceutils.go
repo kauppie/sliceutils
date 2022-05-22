@@ -167,8 +167,16 @@ func IsSet[T comparable](slice []T) bool {
 }
 
 // Join multiple slices together into a single slice. This is a variadic
-// version of Flatten.
+// version of Flatten. The effective difference between Join and Flatten is
+// that this returns empty slice on nil slice arguments while Flatten returns
+// nil slice.
+//
+// Returns nil on no arguments. Returns empty slice on nil slice arguments.
 func Join[T any](slices ...[]T) []T {
+	// Preserve nil if no arguments.
+	if slices == nil {
+		return nil
+	}
 	outSlice := make([]T, 0)
 	for _, slice := range slices {
 		outSlice = append(outSlice, slice...)

@@ -258,6 +258,11 @@ func TestJoin(t *testing.T) {
 		joined := Join(slice, slice2)
 		assert.Equal(t, []int{}, joined)
 	})
+
+	t.Run("Return nil on no arguments", func(t *testing.T) {
+		joined := Join[int]()
+		assert.Nil(t, joined)
+	})
 }
 
 func TestMap(t *testing.T) {
