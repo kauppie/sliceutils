@@ -47,7 +47,7 @@ It starts with a initial value and updates it iteratively using the argument fun
 
 ### >> _Frequencies_
 
-Counts the number of occurrences for each unique element. Requires slice elements to be `comparable`.
+Counts the number of occurrences for each element. Requires slice elements to be `comparable`.
 
 ### >> _IsSortedBy_
 
@@ -55,7 +55,7 @@ Returns true for slices whose elements are sorted according to passed argument f
 
 ### >> _IsSet_
 
-Returns true for slices that are sets. Requires slice elements to be `comparable`.
+Returns true for slices that are sets i.e. contain only unique elements. Requires slice elements to be `comparable`.
 
 ### >> _Join_
 
