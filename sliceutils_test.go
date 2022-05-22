@@ -156,6 +156,36 @@ func TestFlatten(t *testing.T) {
 	})
 }
 
+func TestFold(t *testing.T) {
+	t.Run("Calculate sum and factorial", func(t *testing.T) {
+		numbers := []int{1, 2, 3, 4, 5, 6}
+
+		sum := Fold(numbers, 0, func(acc, next int) int {
+			return acc + next
+		})
+		assert.Equal(t, 0+1+2+3+4+5+6, sum)
+
+		factorial := Fold(numbers, 1, func(acc, next int) int {
+			return acc * next
+		})
+		assert.Equal(t, 1*1*2*3*4*5*6, factorial)
+	})
+
+	t.Run("Return initial value on nil slice", func(t *testing.T) {
+		var slice []int = nil
+
+		folded := Fold(slice, 0, func(acc, next int) int {
+			return acc + next
+		})
+		assert.Equal(t, 0, folded)
+
+		folded2 := Fold(slice, 42, func(acc, next int) int {
+			return acc + next
+		})
+		assert.Equal(t, 42, folded2)
+	})
+}
+
 func TestFrequencies(t *testing.T) {
 	t.Run("Count integer frequencies", func(t *testing.T) {
 		slice := []int{1, 2, 3, 4, 0, 1, 4, 0, 0, 12, 3, 5, 7, 1}
@@ -333,37 +363,6 @@ func TestPartition(t *testing.T) {
 		assert.Nil(t, even)
 		assert.Nil(t, odd)
 	})
-}
-
-func TestFold(t *testing.T) {
-	t.Run("Calculate sum and factorial", func(t *testing.T) {
-		numbers := []int{1, 2, 3, 4, 5, 6}
-
-		sum := Fold(numbers, 0, func(acc, next int) int {
-			return acc + next
-		})
-		assert.Equal(t, 0+1+2+3+4+5+6, sum)
-
-		factorial := Fold(numbers, 1, func(acc, next int) int {
-			return acc * next
-		})
-		assert.Equal(t, 1*1*2*3*4*5*6, factorial)
-	})
-
-	t.Run("Return initial value on nil slice", func(t *testing.T) {
-		var slice []int = nil
-
-		folded := Fold(slice, 0, func(acc, next int) int {
-			return acc + next
-		})
-		assert.Equal(t, 0, folded)
-
-		folded2 := Fold(slice, 42, func(acc, next int) int {
-			return acc + next
-		})
-		assert.Equal(t, 42, folded2)
-	})
-
 }
 
 func TestReverse(t *testing.T) {
