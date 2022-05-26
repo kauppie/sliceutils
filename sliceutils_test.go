@@ -1,10 +1,15 @@
 package sliceutils
 
 import (
+	"strings"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 )
+
+////////////////////////////////
+//********** TESTS ***********//
+////////////////////////////////
 
 func TestAll(t *testing.T) {
 	t.Run("All elements evaluate to true", func(t *testing.T) {
@@ -436,5 +441,33 @@ func TestReverseInPlace(t *testing.T) {
 		var slice []int = nil
 		ReverseInPlace(slice)
 		assert.Nil(t, slice)
+	})
+}
+
+////////////////////////////////
+//******** BENCHMARKS ********//
+////////////////////////////////
+
+func BenchmarkAny(b *testing.B) {
+	slice := []string{"foo", "bar", "baz", "his", "her", "one", "log", "super",
+		"library", "functional function", "slice", "NOW", "hey"}
+
+	b.Run("library", func(b *testing.B) {
+		for i := 0; i < b.N; i++ {
+			var _ = Any(slice, func(x string) bool { return strings.ContainsRune(x, rune('W')) })
+		}
+	})
+
+	b.Run("for-loop", func(b *testing.B) {
+		for i := 0; i < b.N; i++ {
+			b := false
+			for _, x := range slice {
+				if strings.ContainsRune(x, rune('W')) {
+					b = true
+					break
+				}
+			}
+			var _ = b
+		}
 	})
 }
