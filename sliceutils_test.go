@@ -452,22 +452,9 @@ func BenchmarkAll(b *testing.B) {
 	slice := []string{"boo", "bar", "baz", "hib", "heb", "obe", "lob", "suber",
 		"library", "functional function", "slice", "NOW", "hey"}
 
-	b.Run("library", func(b *testing.B) {
+	b.Run("Does all strings contain rune", func(b *testing.B) {
 		for i := 0; i < b.N; i++ {
 			var _ = All(slice, func(x string) bool { return strings.ContainsRune(x, rune('b')) })
-		}
-	})
-
-	b.Run("for-loop", func(b *testing.B) {
-		for i := 0; i < b.N; i++ {
-			b := true
-			for _, x := range slice {
-				if !strings.ContainsRune(x, rune('b')) {
-					b = false
-					break
-				}
-			}
-			var _ = b
 		}
 	})
 }
@@ -476,22 +463,9 @@ func BenchmarkAny(b *testing.B) {
 	slice := []string{"foo", "bar", "baz", "his", "her", "one", "log", "super",
 		"library", "functional function", "slice", "NOW", "hey"}
 
-	b.Run("library", func(b *testing.B) {
+	b.Run("Does any string contain rune", func(b *testing.B) {
 		for i := 0; i < b.N; i++ {
 			var _ = Any(slice, func(x string) bool { return strings.ContainsRune(x, rune('W')) })
-		}
-	})
-
-	b.Run("for-loop", func(b *testing.B) {
-		for i := 0; i < b.N; i++ {
-			b := false
-			for _, x := range slice {
-				if strings.ContainsRune(x, rune('W')) {
-					b = true
-					break
-				}
-			}
-			var _ = b
 		}
 	})
 }
