@@ -13,19 +13,23 @@ Library takes advantage of Go generics increasing usability by compile-time type
 
 ### >> _All_
 
-Returns true if all slice elements are evaluated true with given argument function.
+Returns `true` if all slice elements are evaluated `true` with given argument function.
 
 ### >> _Any_
 
-Returns true if any of slice element is evaluated true with given argument function.
+Returns `true` if any slice element is evaluated `true` with given argument function.
 
 ### >> _Count_
 
-Counts the number of elements in a slice for which the argument function returns true.
+Counts the number of elements in a slice for which the argument function returns `true`.
 
 ### >> _Filter_
 
-Creates a slice where slice elements for which the argument function returns false are filtered out.
+Creates a slice which contains slice elements for which the argument function returns `true`.
+
+### >> _FilterInPlace_
+
+Retains elements in a slice for which the argument function returns `true`. Modifies the original slice and therefore does not allocate.
 
 ### >> _FilterMap_
 
@@ -33,7 +37,7 @@ Filters _and_ maps slice elements to new slice. See [_Filter_](#filter) and [_Ma
 
 ### >> _FindBy_
 
-Searches to find element's index in a slice for which the argument function returns true.
+Searches to find element's index in a slice for which the argument function returns `true`.
 
 ### >> _Flatten_
 
@@ -51,11 +55,11 @@ Counts the number of occurrences for each unique element. Requires slice element
 
 ### >> _IsSortedBy_
 
-Returns true for slices whose elements are sorted according to passed argument function.
+Returns `true` for slices whose elements are sorted according to passed argument function.
 
 ### >> _IsSet_
 
-Returns true for slices that are sets. Requires slice elements to be `comparable`.
+Returns `true` for slices that are sets. Requires slice elements to be `comparable`.
 
 ### >> _Join_
 
@@ -77,9 +81,17 @@ Returns the minimum element value in a slice using provided comparison function.
 
 Partitions slice elements into two separate slices by argument function's boolean return value.
 
+### >> _PartitionInPlace_
+
+Partitions a slice in place so that the first partition contains elements for which the argument function return `true`, and the second partition contains elements that the function returns `false` for.
+
 ### >> _Reverse_
 
-Reverses the order of elements in a slice.
+Creates a slice where the order of elements are reversed.
+
+### >> _ReverseInPlace_
+
+Creates a slice where the order of elements are reversed.
 
 ## Performance
 
