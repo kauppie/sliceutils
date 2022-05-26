@@ -58,6 +58,27 @@ func Filter[T any](slice []T, filterFn func(T) bool) []T {
 	return outSlice
 }
 
+// Filter values in a slice in place by filter function. Modified slice will
+// contain values for which the filter function returns true. Slice is passed
+// as pointer because its length could be modified.
+//
+// Does not allocate. Panics on nil filter function.
+func FilterInPlace[T any](slicep *[]T, filterFn func(T) bool) {
+	// Pointer could be nil.
+	if slicep == nil {
+		return
+	}
+	n := 0
+	for _, val := range *slicep {
+		if filterFn(val) {
+			(*slicep)[n] = val
+			n++
+		}
+	}
+	// Possibly shorten the slice to current length.
+	*slicep = (*slicep)[:n]
+}
+
 // Filter and map slice values with filter map function. Resulting slice
 // will contain mapped values for which the filter map function returns true as
 // the second argument. FilterMap is usually more efficient than using Filter
@@ -245,8 +266,8 @@ func MinBy[T any](slice []T, lessFn func(T, T) bool) (T, bool) {
 // returned slice contains values for which the partition function returns true,
 // and the second slice values for which the function returns false.
 //
-// Returns nil slices on nil slice. Panics on nil map function.
-func Partition[T any](slice []T, partFn func(T) bool) ([]T, []T) {
+// Returns nil slices on nil slice. Panics on nil partition function.
+func Partition[T any](slice []T, firstPart func(T) bool) ([]T, []T) {
 	// Preserve nil.
 	if slice == nil {
 		return nil, nil
@@ -254,13 +275,48 @@ func Partition[T any](slice []T, partFn func(T) bool) ([]T, []T) {
 	trueSlice := make([]T, 0)
 	falseSlice := make([]T, 0)
 	for _, val := range slice {
-		if partFn(val) {
+		if firstPart(val) {
 			trueSlice = append(trueSlice, val)
 		} else {
 			falseSlice = append(falseSlice, val)
 		}
 	}
 	return trueSlice, falseSlice
+}
+
+// Partition slice in place using partition function. First part contains
+// elements for which the partition function returns true, and the second part
+// values for which the function returns false. Function returns the index
+// of the first element in the second partition.
+//
+// Does not allocate. Panics on nil partition function.
+func PartitionInPlace[T any](slice []T, firstPart func(T) bool) int {
+	fwd := 0
+	bck := len(slice) - 1
+	// Return early if there no elements.
+	if fwd > bck {
+		return 0
+	}
+	// Advance indexes until elements at indexes are in wrong positions.
+	for firstPart(slice[fwd]) {
+		fwd++
+	}
+	for !firstPart(slice[bck]) {
+		bck--
+	}
+	// This implementation is open for optimization.
+	for fwd < bck {
+		// Swap elements in wrong partitions.
+		slice[fwd], slice[bck] = slice[bck], slice[fwd]
+		// Advance.
+		for firstPart(slice[fwd]) {
+			fwd++
+		}
+		for !firstPart(slice[bck]) {
+			bck--
+		}
+	}
+	return fwd
 }
 
 // Reverses the order of elements in a slice.
@@ -278,4 +334,14 @@ func Reverse[T any](slice []T) []T {
 		i--
 	}
 	return outSlice
+}
+
+// Reverses the order of elements in a slice.
+//
+// Does not allocate.
+func ReverseInPlace[T any](slice []T) {
+	l := len(slice)
+	for i := 0; i < l/2; i++ {
+		slice[i], slice[l-1-i] = slice[l-1-i], slice[i]
+	}
 }

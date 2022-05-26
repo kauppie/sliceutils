@@ -74,6 +74,24 @@ func TestFilter(t *testing.T) {
 	})
 }
 
+func TestFilterInPlace(t *testing.T) {
+	t.Run("Retain strings shorter than 4 characters", func(t *testing.T) {
+		slice := []string{"hello", "foo", "bar", "pointer", "cow", "F"}
+		FilterInPlace(&slice, func(s string) bool { return len(s) < 4 })
+		assert.Equal(t, []string{"foo", "bar", "cow", "F"}, slice)
+	})
+
+	t.Run("Do nothing on nil slice", func(t *testing.T) {
+		var slice []int = nil
+		FilterInPlace(&slice, func(i int) bool { return i < 4 })
+		assert.Nil(t, slice)
+	})
+
+	t.Run("Do nothing on nil slice pointer", func(t *testing.T) {
+		FilterInPlace(nil, func(i int) bool { return i < 4 })
+	})
+}
+
 func TestFilterMap(t *testing.T) {
 	ToPointer := func(s string) *string {
 		return &s
@@ -353,8 +371,8 @@ func TestPartition(t *testing.T) {
 	t.Run("Partition by integer parity", func(t *testing.T) {
 		slice := []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
 		even, odd := Partition(slice, func(i int) bool { return i%2 == 0 })
-		assert.Equal(t, []int{2, 4, 6, 8, 10}, even)
-		assert.Equal(t, []int{1, 3, 5, 7, 9}, odd)
+		assert.Equal(t, []int{10, 2, 8, 4, 6}, even)
+		assert.Equal(t, []int{5, 7, 3, 9, 1}, odd)
 	})
 
 	t.Run("Return nil on nil slice", func(t *testing.T) {
@@ -362,6 +380,21 @@ func TestPartition(t *testing.T) {
 		even, odd := Partition(slice, func(i int) bool { return i%2 == 0 })
 		assert.Nil(t, even)
 		assert.Nil(t, odd)
+	})
+}
+
+func TestPartitionInPlace(t *testing.T) {
+	t.Run("Partition by integer parity", func(t *testing.T) {
+		slice := []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
+		idx := PartitionInPlace(slice, func(i int) bool { return i%2 == 0 })
+		assert.Equal(t, []int{10, 2, 8, 4, 6}, slice[:idx])
+		assert.Equal(t, []int{5, 7, 3, 9, 1}, slice[idx:])
+	})
+
+	t.Run("Do nothing on nil slice and return zero index", func(t *testing.T) {
+		var slice []int = nil
+		idx := PartitionInPlace(slice, func(i int) bool { return i%2 == 0 })
+		assert.Equal(t, 0, idx)
 	})
 }
 
@@ -376,5 +409,19 @@ func TestReverse(t *testing.T) {
 		var slice []int = nil
 		output := Reverse(slice)
 		assert.Nil(t, output)
+	})
+}
+
+func TestReverseInPlace(t *testing.T) {
+	t.Run("Reverse integer slice", func(t *testing.T) {
+		slice := []int{1, 2, 3, 4, 5}
+		ReverseInPlace(slice)
+		assert.Equal(t, []int{5, 4, 3, 2, 1}, slice)
+	})
+
+	t.Run("Do nothing on nil slice", func(t *testing.T) {
+		var slice []int = nil
+		ReverseInPlace(slice)
+		assert.Nil(t, slice)
 	})
 }
