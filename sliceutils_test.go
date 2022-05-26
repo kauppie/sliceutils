@@ -39,7 +39,7 @@ func TestAny(t *testing.T) {
 		assert.False(t, anyPositive)
 	})
 
-	t.Run("Return true on nil slice", func(t *testing.T) {
+	t.Run("Return false on nil slice", func(t *testing.T) {
 		var slice []int = nil
 		anyPositive := Any(slice, func(i int) bool { return i > 0 })
 		assert.False(t, anyPositive)
