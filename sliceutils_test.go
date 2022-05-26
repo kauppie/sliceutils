@@ -398,6 +398,13 @@ func TestPartitionInPlace(t *testing.T) {
 		assert.Equal(t, []int{-5, -1, -4, -3}, slice[idx:])
 	})
 
+	t.Run("Partition with single element", func(t *testing.T) {
+		slice := []int{1}
+		idx := PartitionInPlace(slice, func(i int) bool { return i > 0 })
+		assert.Equal(t, []int{1}, slice[:idx])
+		assert.Equal(t, []int{}, slice[idx:])
+	})
+
 	t.Run("Do nothing on empty slice and return zero index", func(t *testing.T) {
 		slice := []int{}
 		idx := PartitionInPlace(slice, func(i int) bool { return i%2 == 0 })

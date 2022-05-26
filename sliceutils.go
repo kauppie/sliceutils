@@ -291,32 +291,24 @@ func Partition[T any](slice []T, firstPart func(T) bool) ([]T, []T) {
 //
 // Does not allocate. Panics on nil partition function.
 func PartitionInPlace[T any](slice []T, firstPart func(T) bool) int {
-	fwd := 0
-	bck := len(slice) - 1
-	// Return early if there no elements.
-	if fwd > bck {
-		return 0
-	}
-	// Advance indexes until elements at indexes are in wrong positions.
-	for firstPart(slice[fwd]) {
+	fwd := -1
+	bck := len(slice)
+	for {
+		// Increment indexes until elements at wrong partitions are found.
 		fwd++
-	}
-	for !firstPart(slice[bck]) {
-		bck--
-	}
-	// This implementation is open for optimization.
-	for fwd < bck {
-		// Swap elements in wrong partitions.
-		slice[fwd], slice[bck] = slice[bck], slice[fwd]
-		// Advance.
-		for firstPart(slice[fwd]) {
+		for fwd < bck && firstPart(slice[fwd]) {
 			fwd++
 		}
-		for !firstPart(slice[bck]) {
+		bck--
+		for fwd < bck && !firstPart(slice[bck]) {
 			bck--
 		}
+		if fwd >= bck {
+			return fwd
+		}
+		// Swap elements in wrong partitions.
+		slice[fwd], slice[bck] = slice[bck], slice[fwd]
 	}
-	return fwd
 }
 
 // Reverses the order of elements in a slice.
