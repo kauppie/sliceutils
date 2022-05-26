@@ -384,11 +384,24 @@ func TestPartition(t *testing.T) {
 }
 
 func TestPartitionInPlace(t *testing.T) {
-	t.Run("Partition by integer parity", func(t *testing.T) {
+	t.Run("Partition with even number of elements", func(t *testing.T) {
 		slice := []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
 		idx := PartitionInPlace(slice, func(i int) bool { return i%2 == 0 })
 		assert.Equal(t, []int{10, 2, 8, 4, 6}, slice[:idx])
 		assert.Equal(t, []int{5, 7, 3, 9, 1}, slice[idx:])
+	})
+
+	t.Run("Partition with odd number of elements", func(t *testing.T) {
+		slice := []int{1, 3, 4, -1, -5, 10, 9, -4, -3}
+		idx := PartitionInPlace(slice, func(i int) bool { return i > 0 })
+		assert.Equal(t, []int{1, 3, 4, 9, 10}, slice[:idx])
+		assert.Equal(t, []int{-5, -1, -4, -3}, slice[idx:])
+	})
+
+	t.Run("Do nothing on empty slice and return zero index", func(t *testing.T) {
+		slice := []int{}
+		idx := PartitionInPlace(slice, func(i int) bool { return i%2 == 0 })
+		assert.Equal(t, 0, idx)
 	})
 
 	t.Run("Do nothing on nil slice and return zero index", func(t *testing.T) {
