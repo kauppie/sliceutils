@@ -371,8 +371,8 @@ func TestPartition(t *testing.T) {
 	t.Run("Partition by integer parity", func(t *testing.T) {
 		slice := []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
 		even, odd := Partition(slice, func(i int) bool { return i%2 == 0 })
-		assert.Equal(t, []int{10, 2, 8, 4, 6}, even)
-		assert.Equal(t, []int{5, 7, 3, 9, 1}, odd)
+		assert.Equal(t, []int{2, 4, 6, 8, 10}, even)
+		assert.Equal(t, []int{1, 3, 5, 7, 9}, odd)
 	})
 
 	t.Run("Return nil on nil slice", func(t *testing.T) {
