@@ -441,5 +441,6 @@ func SymmetricDifference[T comparable](lhs, rhs []T) []T {
 // from both left and right sets.
 func Union[T comparable](lhs, rhs []T) []T {
 	outSlice := append(lhs, rhs...)
-	return Deduplicate(outSlice)
+	DeduplicateInPlace(&outSlice)
+	return outSlice
 }
