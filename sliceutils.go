@@ -26,6 +26,28 @@ func Any[T any](slice []T, anyFn func(T) bool) bool {
 	return false
 }
 
+// Returns true if left and right sets do not have common elements. More
+// accurately, intersection of two disjoint sets is empty set.
+func AreDisjoint[T comparable](lhs, rhs []T) bool {
+	uniques := makeSet(rhs)
+	return !Any(lhs, func(val T) bool {
+		_, exists := uniques[val]
+		return exists
+	})
+}
+
+// Returns true if slice contains given value.
+//
+// Returns false on nil slice.
+func Contains[T comparable](slice []T, value T) bool {
+	for _, val := range slice {
+		if val == value {
+			return true
+		}
+	}
+	return false
+}
+
 // Count the number of matching items in a slice. Counter is incremented if
 // counter function returns true on them.
 //
@@ -38,6 +60,45 @@ func Count[T any](slice []T, counterFn func(T) bool) int {
 		}
 	}
 	return count
+}
+
+// Remove duplicate elements. Effectively creates a set. Order of elements is
+// preserved.
+func Deduplicate[T comparable](slice []T) []T {
+	uniques := make(map[T]struct{})
+	return Filter(slice, func(val T) bool {
+		_, exists := uniques[val]
+		if !exists {
+			uniques[val] = struct{}{}
+		}
+		return !exists
+	})
+}
+
+// Remove duplicate elements in place modifying the original slice. Effectively
+// creates a set. Order of elements is preserved. Function takes the slice as a
+// pointer as its length may be modified.
+//
+// Does not allocate.
+func DeduplicateInPlace[T comparable](slice *[]T) {
+	uniques := make(map[T]struct{})
+	FilterInPlace(slice, func(val T) bool {
+		_, exists := uniques[val]
+		if !exists {
+			uniques[val] = struct{}{}
+		}
+		return !exists
+	})
+}
+
+// Creates a difference set from two slices. Resulting set will contain
+// elements from left set which are not in the right set.
+func Difference[T comparable](lhs, rhs []T) []T {
+	uniques := makeSet(rhs)
+	return Filter(lhs, func(val T) bool {
+		_, exists := uniques[val]
+		return !exists
+	})
 }
 
 // Filter values in a slice by filter function. Resulting slice will contain
@@ -158,6 +219,33 @@ func Frequencies[T comparable](slice []T) map[T]int {
 	return outMap
 }
 
+// Creates a intersection set from two slices. Resulting slice will contain
+// elements which are in left and right sets.
+func Intersection[T comparable](lhs, rhs []T) []T {
+	uniques := makeSet(rhs)
+	outSlice := make([]T, 0)
+	for _, val := range lhs {
+		if _, exists := uniques[val]; exists {
+			outSlice = append(outSlice, val)
+		}
+	}
+	return outSlice
+}
+
+// Returns true if the slice is a set i.e. contains only unique elements.
+//
+// Returns true on nil slice.
+func IsSet[T comparable](slice []T) bool {
+	uniques := make(map[T]struct{})
+	for _, val := range slice {
+		if _, found := uniques[val]; found {
+			return false
+		}
+		uniques[val] = struct{}{}
+	}
+	return true
+}
+
 // Returns true if the slice is sorted by given comparison function. For
 // ascending order, pass a comparison function which returns true when left is
 // less than right.
@@ -172,19 +260,22 @@ func IsSortedBy[T any](slice []T, lessFn func(T, T) bool) bool {
 	return true
 }
 
-// Returns true if the slice is a set e.g. contains only unique elements.
+// Returns true if all elements of `subset` set are contained within `of` set.
 //
-// Returns true on nil slice.
-func IsSet[T comparable](slice []T) bool {
-	uniques := make(map[T]struct{})
-	for _, val := range slice {
-		if _, found := uniques[val]; found {
-			return false
-		} else {
-			uniques[val] = struct{}{}
-		}
-	}
-	return true
+// Empty sets are subsets of non-empty and empty sets.
+func IsSubSet[T comparable](subset, of []T) bool {
+	return IsSuperSet(of, subset)
+}
+
+// Returns true if `super` set contains all elements of `of` set.
+//
+// Non-empty and empty sets are super sets of empty sets.
+func IsSuperSet[T comparable](super, of []T) bool {
+	uniques := makeSet(of)
+	return All(super, func(val T) bool {
+		_, exists := uniques[val]
+		return exists
+	})
 }
 
 // Join multiple slices together into a single slice. This is a variadic
@@ -336,4 +427,19 @@ func ReverseInPlace[T any](slice []T) {
 	for i := 0; i < l/2; i++ {
 		slice[i], slice[l-1-i] = slice[l-1-i], slice[i]
 	}
+}
+
+// Creates a symmetric difference set from two slices. Resulting slice will
+// contain elements from left and right sets which are not in both i.e. in
+// their intersection.
+func SymmetricDifference[T comparable](lhs, rhs []T) []T {
+	// append is ok here as the combined sets do not overlap.
+	return append(Difference(lhs, rhs), Difference(rhs, lhs)...)
+}
+
+// Creates a union set from two slices. Resulting set will contain elements
+// from both left and right sets.
+func Union[T comparable](lhs, rhs []T) []T {
+	outSlice := append(lhs, rhs...)
+	return Deduplicate(outSlice)
 }
