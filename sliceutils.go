@@ -271,8 +271,8 @@ func IsSubSet[T comparable](subset, of []T) bool {
 //
 // Non-empty and empty sets are super sets of empty sets.
 func IsSuperSet[T comparable](super, of []T) bool {
-	uniques := makeSet(of)
-	return All(super, func(val T) bool {
+	uniques := makeSet(super)
+	return All(of, func(val T) bool {
 		_, exists := uniques[val]
 		return exists
 	})
@@ -432,6 +432,8 @@ func ReverseInPlace[T any](slice []T) {
 // Creates a symmetric difference set from two slices. Resulting slice will
 // contain elements from left and right sets which are not in both i.e. in
 // their intersection.
+//
+// Returns nil if both slices are nil.
 func SymmetricDifference[T comparable](lhs, rhs []T) []T {
 	// append is ok here as the combined sets do not overlap.
 	return append(Difference(lhs, rhs), Difference(rhs, lhs)...)
