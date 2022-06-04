@@ -46,6 +46,47 @@ func TestAny(t *testing.T) {
 	})
 }
 
+func TestAreDisjoint(t *testing.T) {
+	t.Run("Sets are disjoint", func(t *testing.T) {
+		a := []int{1, 2, 3}
+		b := []int{5, 4, 6}
+		disjoint := AreDisjoint(a, b)
+		assert.True(t, disjoint)
+	})
+
+	t.Run("Sets are not disjoint", func(t *testing.T) {
+		a := []int{1, 2, 3}
+		b := []int{3, 2, 6}
+		disjoint := AreDisjoint(a, b)
+		assert.False(t, disjoint)
+	})
+
+	t.Run("Nil sets are disjoint", func(t *testing.T) {
+		disjoint := AreDisjoint[int](nil, nil)
+		assert.True(t, disjoint)
+	})
+}
+
+func TestContains(t *testing.T) {
+	t.Run("Slice contains element", func(t *testing.T) {
+		slice := []int{1, 2, 3, 4}
+		contains := Contains(slice, 2)
+		assert.True(t, contains)
+	})
+
+	t.Run("Slice does not contain element", func(t *testing.T) {
+		slice := []int{1, 2, 3, 4}
+		contains := Contains(slice, 5)
+		assert.False(t, contains)
+	})
+
+	t.Run("Return false on nil slice", func(t *testing.T) {
+		var slice []int = nil
+		contains := Contains(slice, 1)
+		assert.False(t, contains)
+	})
+}
+
 func TestCount(t *testing.T) {
 	t.Run("Count zeros", func(t *testing.T) {
 		slice := []int{1, 2, 3, 4, 0, 1, 4, 0, 0, 12, 3, 5, 7, 1}
@@ -57,6 +98,71 @@ func TestCount(t *testing.T) {
 		var slice []int = nil
 		count := Count(slice, func(i int) bool { return i == 0 })
 		assert.Equal(t, 0, count)
+	})
+}
+
+func TestDeduplicate(t *testing.T) {
+	t.Run("Slice with duplicates", func(t *testing.T) {
+		slice := []int{1, 2, 3, 2}
+		depupped := Deduplicate(slice)
+		assert.Equal(t, []int{1, 2, 3}, depupped)
+	})
+
+	t.Run("Slice without duplicates", func(t *testing.T) {
+		slice := []int{1, 2, 3}
+		depupped := Deduplicate(slice)
+		assert.Equal(t, []int{1, 2, 3}, depupped)
+	})
+
+	t.Run("Return nil on nil slice", func(t *testing.T) {
+		var slice []int = nil
+		depupped := Deduplicate(slice)
+		assert.Nil(t, depupped)
+	})
+}
+
+func TestDeduplicateInPlace(t *testing.T) {
+	t.Run("Slice with duplicates", func(t *testing.T) {
+		slice := []int{1, 2, 3, 2}
+		DeduplicateInPlace(&slice)
+		assert.Equal(t, []int{1, 2, 3}, slice)
+	})
+
+	t.Run("Slice without duplicates", func(t *testing.T) {
+		slice := []int{1, 2, 3}
+		DeduplicateInPlace(&slice)
+		assert.Equal(t, []int{1, 2, 3}, slice)
+	})
+
+	t.Run("Return nil on nil slice", func(t *testing.T) {
+		var slice []int = nil
+		DeduplicateInPlace(&slice)
+		assert.Nil(t, slice)
+	})
+
+	t.Run("Do nothing on nil slice pointer", func(t *testing.T) {
+		DeduplicateInPlace[int](nil)
+	})
+}
+
+func TestDifference(t *testing.T) {
+	t.Run("Difference of two overlapping sets", func(t *testing.T) {
+		a := []int{1, 2, 3}
+		b := []int{3, 2, 6}
+		difference := Difference(a, b)
+		assert.Equal(t, []int{1}, difference)
+	})
+
+	t.Run("Difference of two non-overlapping sets", func(t *testing.T) {
+		a := []int{1, 2, 3}
+		b := []int{5, 4, 6}
+		difference := Difference(a, b)
+		assert.Equal(t, []int{1, 2, 3}, difference)
+	})
+
+	t.Run("Return nil when both sets are nil", func(t *testing.T) {
+		difference := Difference[int](nil, nil)
+		assert.Nil(t, difference)
 	})
 }
 
@@ -234,6 +340,47 @@ func TestFrequencies(t *testing.T) {
 	})
 }
 
+func TestIntersection(t *testing.T) {
+	t.Run("Intersection of two overlapping sets", func(t *testing.T) {
+		a := []int{1, 2, 3}
+		b := []int{3, 2, 6}
+		intersection := Intersection(a, b)
+		assert.Equal(t, []int{2, 3}, intersection)
+	})
+
+	t.Run("Intersection of two non-overlapping sets", func(t *testing.T) {
+		a := []int{1, 2, 3}
+		b := []int{5, 4, 6}
+		intersection := Intersection(a, b)
+		assert.Equal(t, []int{}, intersection)
+	})
+
+	t.Run("Return nil when both sets are nil", func(t *testing.T) {
+		intersection := Intersection[int](nil, nil)
+		assert.Nil(t, intersection)
+	})
+}
+
+func TestIsSet(t *testing.T) {
+	t.Run("Is slice with only unique elements a set", func(t *testing.T) {
+		set := []string{"foo", "bar", "hello", "world", "baz"}
+		isSet := IsSet(set)
+		assert.True(t, isSet)
+	})
+
+	t.Run("Is slice with repeating elements a set", func(t *testing.T) {
+		notSet := []string{"foo", "bar", "baz", "foo", "hello"}
+		isSet := IsSet(notSet)
+		assert.False(t, isSet)
+	})
+
+	t.Run("Return true on nil slice", func(t *testing.T) {
+		var set []string = nil
+		isSet := IsSet(set)
+		assert.True(t, isSet)
+	})
+}
+
 func TestIsSortedBy(t *testing.T) {
 	t.Run("Is sorted by with sorted slices", func(t *testing.T) {
 		sortedSlice := []int{1, 2, 3, 4, 4, 5, 6, 7, 8}
@@ -264,23 +411,49 @@ func TestIsSortedBy(t *testing.T) {
 	})
 }
 
-func TestIsSet(t *testing.T) {
-	t.Run("Is slice with only unique elements a set", func(t *testing.T) {
-		slice := []string{"foo", "bar", "hello", "world", "baz"}
-		isSet := IsSet(slice)
-		assert.True(t, isSet)
+func TestIsSubSet(t *testing.T) {
+	t.Run("IsSubSet on subset", func(t *testing.T) {
+		super := []int{1, 2, 3}
+		sub := []int{1, 2}
+		assert.True(t, IsSubSet(sub, super))
 	})
 
-	t.Run("Is slice with repeating elements a set", func(t *testing.T) {
-		slice := []string{"foo", "bar", "baz", "foo", "hello"}
-		isSet := IsSet(slice)
-		assert.False(t, isSet)
+	t.Run("IsSubSet on non-subset", func(t *testing.T) {
+		super := []int{1, 2, 3}
+		notSub := []int{1, 2, 4}
+		assert.False(t, IsSubSet(notSub, super))
 	})
 
-	t.Run("Return true on nil slice", func(t *testing.T) {
-		var slice []string = nil
-		isSet := IsSet(slice)
-		assert.True(t, isSet)
+	t.Run("Equal set is subset of itself", func(t *testing.T) {
+		set := []int{1, 2, 3}
+		assert.True(t, IsSubSet(set, set))
+	})
+
+	t.Run("True on nil sets", func(t *testing.T) {
+		assert.True(t, IsSubSet[int](nil, nil))
+	})
+}
+
+func TestIsSuperSet(t *testing.T) {
+	t.Run("IsSuperSet on superset", func(t *testing.T) {
+		super := []int{1, 2, 3}
+		sub := []int{1, 2}
+		assert.True(t, IsSuperSet(super, sub))
+	})
+
+	t.Run("IsSuperSet on non-superset", func(t *testing.T) {
+		notSuper := []int{1, 2, 3}
+		sub := []int{1, 2, 4}
+		assert.False(t, IsSuperSet(notSuper, sub))
+	})
+
+	t.Run("Equal set is superset of itself", func(t *testing.T) {
+		set := []int{1, 2, 3}
+		assert.True(t, IsSuperSet(set, set))
+	})
+
+	t.Run("True on nil sets", func(t *testing.T) {
+		assert.True(t, IsSubSet[int](nil, nil))
 	})
 }
 
@@ -443,5 +616,61 @@ func TestReverseInPlace(t *testing.T) {
 		var slice []int = nil
 		ReverseInPlace(slice)
 		assert.Nil(t, slice)
+	})
+}
+
+func TestSymmetricDifference(t *testing.T) {
+	t.Run("Symmetric difference on two overlapping sets", func(t *testing.T) {
+		a := []int{1, 2, 3}
+		b := []int{3, 2, 6}
+		symmDiff := SymmetricDifference(a, b)
+		assert.Equal(t, []int{1, 6}, symmDiff)
+	})
+
+	t.Run("Preserve left set on empty right set", func(t *testing.T) {
+		a := []int{1, 2, 3}
+		b := []int{}
+		symmDiff := SymmetricDifference(a, b)
+		assert.Equal(t, []int{1, 2, 3}, symmDiff)
+	})
+
+	t.Run("Empty set on empty sets", func(t *testing.T) {
+		a := []int{}
+		b := []int{}
+		symmDiff := SymmetricDifference(a, b)
+		assert.Equal(t, []int{}, symmDiff)
+	})
+
+	t.Run("Return nil when both sets are nil", func(t *testing.T) {
+		symmDiff := SymmetricDifference[int](nil, nil)
+		assert.Nil(t, symmDiff)
+	})
+}
+
+func TestUnion(t *testing.T) {
+	t.Run("Union on two overlapping sets", func(t *testing.T) {
+		a := []int{1, 2, 3}
+		b := []int{3, 2, 6}
+		union := Union(a, b)
+		assert.Equal(t, []int{1, 2, 3, 6}, union)
+	})
+
+	t.Run("Preserve left set on empty right set", func(t *testing.T) {
+		a := []int{1, 2, 3}
+		b := []int{}
+		union := Union(a, b)
+		assert.Equal(t, []int{1, 2, 3}, union)
+	})
+
+	t.Run("Empty set on empty sets", func(t *testing.T) {
+		a := []int{}
+		b := []int{}
+		union := Union(a, b)
+		assert.Equal(t, []int{}, union)
+	})
+
+	t.Run("Return nil when both sets are nil", func(t *testing.T) {
+		union := Union[int](nil, nil)
+		assert.Nil(t, union)
 	})
 }
