@@ -19,9 +19,29 @@ Returns `true` if all slice elements are evaluated `true` with given argument fu
 
 Returns `true` if any slice element is evaluated `true` with given argument function.
 
+### >> _AreDisjoint_
+
+Returns `true` if two slice sets do not have common elements.
+
+### >> _Contains_
+
+Returns `true` if slice contains given element.
+
 ### >> _Count_
 
 Counts the number of elements in a slice for which the argument function returns `true`.
+
+### >> _Deduplicate_
+
+Removes duplicate elements from a slice creating a new slice.
+
+### >> _DeduplicateInPlace_
+
+Removes duplicate elements from a slice in place.
+
+### >> _Difference_
+
+Calculates a difference set between two slice sets.
 
 ### >> _Filter_
 
@@ -53,13 +73,25 @@ It starts with a initial value and updates it iteratively using the argument fun
 
 Counts the number of occurrences for each element. Requires slice elements to be `comparable`.
 
-### >> _IsSortedBy_
+### >> _Intersection_
 
-Returns `true` for slices whose elements are sorted according to passed argument function.
+Calculates a intersection set between two slice sets.
 
 ### >> _IsSet_
 
 Returns `true` for slices that are sets i.e. contain only unique elements. Requires slice elements to be `comparable`.
+
+### >> _IsSortedBy_
+
+Returns `true` for slices whose elements are sorted according to passed argument function.
+
+### >> _IsSubSet_
+
+Returns `true` if first slice set is a subset of the second slice set.
+
+### >> _IsSuperSet_
+
+Returns `true` if first slice set is a superset of the second slice set.
 
 ### >> _Join_
 
@@ -92,6 +124,14 @@ Creates a slice where the order of elements are reversed.
 ### >> _ReverseInPlace_
 
 Creates a slice where the order of elements are reversed.
+
+### >> _SymmetricDifference_
+
+Calculates a symmetric difference set from two slice sets.
+
+### >> _Union_
+
+Calculates a union set from two slice sets.
 
 ## Performance
 
