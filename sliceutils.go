@@ -64,6 +64,8 @@ func Count[T any](slice []T, counterFn func(T) bool) int {
 
 // Remove duplicate elements. Effectively creates a set. Order of elements is
 // preserved.
+//
+// Returns nil on nil set.
 func Deduplicate[T comparable](slice []T) []T {
 	uniques := make(map[T]struct{})
 	return Filter(slice, func(val T) bool {
@@ -93,6 +95,8 @@ func DeduplicateInPlace[T comparable](slice *[]T) {
 
 // Creates a difference set from two slices. Resulting set will contain
 // elements from left set which are not in the right set.
+//
+// Returns nil if both sets are nil.
 func Difference[T comparable](lhs, rhs []T) []T {
 	uniques := makeSet(rhs)
 	return Filter(lhs, func(val T) bool {
@@ -221,7 +225,12 @@ func Frequencies[T comparable](slice []T) map[T]int {
 
 // Creates a intersection set from two slices. Resulting slice will contain
 // elements which are in left and right sets.
+//
+// Returns nil if both sets are nil.
 func Intersection[T comparable](lhs, rhs []T) []T {
+	if lhs == nil && rhs == nil {
+		return nil
+	}
 	uniques := makeSet(rhs)
 	outSlice := make([]T, 0)
 	for _, val := range lhs {
@@ -433,7 +442,7 @@ func ReverseInPlace[T any](slice []T) {
 // contain elements from left and right sets which are not in both i.e. in
 // their intersection.
 //
-// Returns nil if both slices are nil.
+// Returns nil if both sets are nil.
 func SymmetricDifference[T comparable](lhs, rhs []T) []T {
 	// append is ok here as the combined sets do not overlap.
 	return append(Difference(lhs, rhs), Difference(rhs, lhs)...)
@@ -441,6 +450,8 @@ func SymmetricDifference[T comparable](lhs, rhs []T) []T {
 
 // Creates a union set from two slices. Resulting set will contain elements
 // from both left and right sets.
+//
+// Returns nil if both sets are nil.
 func Union[T comparable](lhs, rhs []T) []T {
 	outSlice := append(lhs, rhs...)
 	DeduplicateInPlace(&outSlice)
