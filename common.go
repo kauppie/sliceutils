@@ -8,3 +8,9 @@ func makeSet[T comparable](slice []T) map[T]struct{} {
 	}
 	return uniques
 }
+
+// Returns the zero value of type T.
+func zeroValue[T any]() T {
+	var t T
+	return t
+}

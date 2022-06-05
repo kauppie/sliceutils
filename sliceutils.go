@@ -330,8 +330,7 @@ func Map[T, U any](slice []T, mapFn func(T) U) []U {
 // If slice is empty, returns zero value of type T and false.
 func MaxBy[T any](slice []T, lessFn func(T, T) bool) (T, bool) {
 	if len(slice) == 0 {
-		var t T
-		return t, false
+		return zeroValue[T](), false
 	}
 	max := slice[0]
 	for _, val := range slice[1:] {
@@ -350,8 +349,7 @@ func MaxBy[T any](slice []T, lessFn func(T, T) bool) (T, bool) {
 // If slice is empty, returns zero value of type T and false.
 func MinBy[T any](slice []T, lessFn func(T, T) bool) (T, bool) {
 	if len(slice) == 0 {
-		var t T
-		return t, false
+		return zeroValue[T](), false
 	}
 	min := slice[0]
 	for _, val := range slice[1:] {
