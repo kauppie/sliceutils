@@ -9,7 +9,77 @@ This library implements several high-level functions useful for interacting with
 
 Library takes advantage of Go generics increasing usability by compile-time type-safety. Go version of at least **1.18** is therefore required.
 
-## Functions
+## Examples
+
+Below are few examples on how this library can make your code **more** concise and **less** error-prone.
+
+### _Map strings to their lengths_
+
+```go
+var strings []string
+
+// Replace
+lens := make([]int, 0)
+for _, s := range strings {
+  lens = append(lens, len(s))
+}
+
+// With
+lens := Map(strings, func(s string) int { return len(s) })
+```
+
+### _Get positive numbers from a slice_
+
+```go
+var nums []int
+
+// Replace
+pos := make([]int, 0)
+for _, n := range nums {
+  if n > 0 {
+    pos = append(pos, n)
+  }
+}
+
+// With
+pos := Filter(nums, func(n int) bool { return n > 0 })
+```
+
+### _Flatten slice_
+
+```go
+var slices [][]int
+
+// Replace
+flat := make([]int, 0)
+for _, slice := range slices {
+  flat = append(flat, slice...)
+}
+
+// With
+flat := Flatten(slices)
+```
+
+### _Deduplicate slice_
+
+```go
+var slice []int
+
+// Replace
+uniques := make(map[int]struct{})
+dedup := make([]int, 0)
+for _, val := range slice {
+  if _, ok := uniques[val]; !ok {
+    dedup = append(dedup, val)
+    uniques[val] = struct{}{}
+  }
+}
+
+// With
+dedup := Deduplicate(slice)
+```
+
+## List of all functions
 
 ### >> _All_
 
