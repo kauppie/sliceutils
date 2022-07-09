@@ -247,7 +247,7 @@ func Intersection[T comparable](lhs, rhs []T) []T {
 func IsSet[T comparable](slice []T) bool {
 	uniques := make(map[T]struct{})
 	for _, val := range slice {
-		if _, found := uniques[val]; found {
+		if _, ok := uniques[val]; ok {
 			return false
 		}
 		uniques[val] = struct{}{}
@@ -322,6 +322,16 @@ func Map[T, U any](slice []T, mapFn func(T) U) []U {
 	return outSlice
 }
 
+// Maps each slice element to a new value of the same type using a mapping
+// function.
+//
+// Panics on nil mapping function.
+func MapInPlace[T any](slice []T, mapFn func(T) T) {
+	for i := 0; i < len(slice); i++ {
+		slice[i] = mapFn(slice[i])
+	}
+}
+
 // Returns the maximum element value and true from non-empty slice using
 // the provided comparison function. To get maximum value, pass a comparison
 // function which returns true when left is less than right. Function is
@@ -330,8 +340,7 @@ func Map[T, U any](slice []T, mapFn func(T) U) []U {
 // If slice is empty, returns zero value of type T and false.
 func MaxBy[T any](slice []T, lessFn func(T, T) bool) (T, bool) {
 	if len(slice) == 0 {
-		var t T
-		return t, false
+		return zeroValue[T](), false
 	}
 	max := slice[0]
 	for _, val := range slice[1:] {
@@ -350,8 +359,7 @@ func MaxBy[T any](slice []T, lessFn func(T, T) bool) (T, bool) {
 // If slice is empty, returns zero value of type T and false.
 func MinBy[T any](slice []T, lessFn func(T, T) bool) (T, bool) {
 	if len(slice) == 0 {
-		var t T
-		return t, false
+		return zeroValue[T](), false
 	}
 	min := slice[0]
 	for _, val := range slice[1:] {

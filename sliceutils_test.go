@@ -505,6 +505,26 @@ func TestMap(t *testing.T) {
 	})
 }
 
+func TestMapInPlace(t *testing.T) {
+	t.Run("Integers incremented", func(t *testing.T) {
+		slice := []int{1, 2, 3}
+		MapInPlace(slice, func(i int) int { return i + 1 })
+		assert.Equal(t, []int{2, 3, 4}, slice)
+	})
+
+	t.Run("Strings capitalized", func(t *testing.T) {
+		slice := []string{"bar", "", "f", "hello", "world"}
+		MapInPlace(slice, func(s string) string { return strings.ToUpper(s) })
+		assert.Equal(t, []string{"BAR", "", "F", "HELLO", "WORLD"}, slice)
+	})
+
+	t.Run("Do nothing on nil slice", func(t *testing.T) {
+		var slice []int = nil
+		MapInPlace(slice, func(i int) int { return i })
+		assert.Nil(t, slice)
+	})
+}
+
 func TestMaxBy(t *testing.T) {
 	t.Run("Return max from slice", func(t *testing.T) {
 		slice := []int{4, 5, 7, 3, 9, -1, 3, 4, 7, 12, 43, 10, 5}
