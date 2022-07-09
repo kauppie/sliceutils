@@ -171,6 +171,10 @@ Joins one or more slices together. Similar to [_Flatten_](#flatten) but uses var
 
 Maps each element through argument function which can modify their type and/or value.
 
+### >> _MapInPlace_
+
+Maps each slice element to a new value of the same type with provided mapping function. Does the operation in place modifying the original slice.
+
 ### >> _MaxBy_
 
 Returns the maximum element value in a slice using provided comparison function.
@@ -193,7 +197,7 @@ Creates a slice where the order of elements are reversed.
 
 ### >> _ReverseInPlace_
 
-Creates a slice where the order of elements are reversed.
+Reverses the order of elements in a slice.
 
 ### >> _SymmetricDifference_
 

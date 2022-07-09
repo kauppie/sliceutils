@@ -247,7 +247,7 @@ func Intersection[T comparable](lhs, rhs []T) []T {
 func IsSet[T comparable](slice []T) bool {
 	uniques := make(map[T]struct{})
 	for _, val := range slice {
-		if _, found := uniques[val]; found {
+		if _, ok := uniques[val]; ok {
 			return false
 		}
 		uniques[val] = struct{}{}
@@ -320,6 +320,16 @@ func Map[T, U any](slice []T, mapFn func(T) U) []U {
 		outSlice = append(outSlice, mapFn(val))
 	}
 	return outSlice
+}
+
+// Maps each slice element to a new value of the same type using a mapping
+// function.
+//
+// Panics on nil mapping function.
+func MapInPlace[T any](slice []T, mapFn func(T) T) {
+	for i := 0; i < len(slice); i++ {
+		slice[i] = mapFn(slice[i])
+	}
 }
 
 // Returns the maximum element value and true from non-empty slice using

@@ -1,6 +1,7 @@
 package sliceutils
 
 import (
+	"strings"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -497,6 +498,26 @@ func TestMap(t *testing.T) {
 		var slice []string = nil
 		outSlice := Map(slice, func(s string) int { return len(s) })
 		assert.Nil(t, outSlice)
+	})
+}
+
+func TestMapInPlace(t *testing.T) {
+	t.Run("Integers incremented", func(t *testing.T) {
+		slice := []int{1, 2, 3}
+		MapInPlace(slice, func(i int) int { return i + 1 })
+		assert.Equal(t, []int{2, 3, 4}, slice)
+	})
+
+	t.Run("Strings capitalized", func(t *testing.T) {
+		slice := []string{"bar", "", "f", "hello", "world"}
+		MapInPlace(slice, func(s string) string { return strings.ToUpper(s) })
+		assert.Equal(t, []string{"BAR", "", "F", "HELLO", "WORLD"}, slice)
+	})
+
+	t.Run("Do nothing on nil slice", func(t *testing.T) {
+		var slice []int = nil
+		MapInPlace(slice, func(i int) int { return i })
+		assert.Nil(t, slice)
 	})
 }
 
