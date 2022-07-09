@@ -688,7 +688,7 @@ func BenchmarkAll(b *testing.B) {
 	slice := []string{"boo", "bar", "baz", "hib", "heb", "obe", "lob", "suber",
 		"library", "functional function", "slice", "NOW", "hey"}
 
-	b.Run("Does all strings contain rune", func(b *testing.B) {
+	b.Run("Do all strings contain rune", func(b *testing.B) {
 		for i := 0; i < b.N; i++ {
 			var _ = All(slice, func(x string) bool { return strings.ContainsRune(x, rune('b')) })
 		}
