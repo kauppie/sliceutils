@@ -725,3 +725,25 @@ func BenchmarkAny(b *testing.B) {
 		}
 	})
 }
+
+func BenchmarkFilter(b *testing.B) {
+	b.Run("Filter to include strings shorter than 4 characters", func(b *testing.B) {
+		slice := []string{"foo", "bar", "baz", "his", "her", "one", "log", "super",
+			"library", "functional function", "slice", "NOW", "hey"}
+
+		for i := 0; i < b.N; i++ {
+			var _ = Filter(slice, func(x string) bool { return len(x) < 4 })
+		}
+	})
+}
+
+func BenchmarkFilterInPlace(b *testing.B) {
+	b.Run("Filter in-place to include strings shorter than 4 characters", func(b *testing.B) {
+		for i := 0; i < b.N; i++ {
+			slice := []string{"foo", "bar", "baz", "his", "her", "one", "log", "super",
+				"library", "functional function", "slice", "NOW", "hey"}
+
+			FilterInPlace(&slice, func(x string) bool { return len(x) < 4 })
+		}
+	})
+}
