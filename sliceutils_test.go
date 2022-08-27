@@ -8,6 +8,10 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+////////////////////////////////
+//********** TESTS ***********//
+////////////////////////////////
+
 func TestAll(t *testing.T) {
 	t.Run("All elements evaluate to true", func(t *testing.T) {
 		slice := []int{1, 4, 6, 2, 3, 7}
@@ -703,5 +707,53 @@ func TestUnion(t *testing.T) {
 	t.Run("Return nil when both sets are nil", func(t *testing.T) {
 		union := Union[int](nil, nil)
 		assert.Nil(t, union)
+	})
+}
+
+////////////////////////////////
+//******** BENCHMARKS ********//
+////////////////////////////////
+
+func BenchmarkAll(b *testing.B) {
+	slice := []string{"boo", "bar", "baz", "hib", "heb", "obe", "lob", "suber",
+		"library", "functional function", "slice", "NOW", "hey"}
+
+	b.Run("Do all strings contain rune", func(b *testing.B) {
+		for i := 0; i < b.N; i++ {
+			var _ = All(slice, func(x string) bool { return strings.ContainsRune(x, rune('b')) })
+		}
+	})
+}
+
+func BenchmarkAny(b *testing.B) {
+	slice := []string{"foo", "bar", "baz", "his", "her", "one", "log", "super",
+		"library", "functional function", "slice", "NOW", "hey"}
+
+	b.Run("Does any string contain rune", func(b *testing.B) {
+		for i := 0; i < b.N; i++ {
+			var _ = Any(slice, func(x string) bool { return strings.ContainsRune(x, rune('W')) })
+		}
+	})
+}
+
+func BenchmarkFilter(b *testing.B) {
+	b.Run("Filter to include strings shorter than 4 characters", func(b *testing.B) {
+		slice := []string{"foo", "bar", "baz", "his", "her", "one", "log", "super",
+			"library", "functional function", "slice", "NOW", "hey"}
+
+		for i := 0; i < b.N; i++ {
+			var _ = Filter(slice, func(x string) bool { return len(x) < 4 })
+		}
+	})
+}
+
+func BenchmarkFilterInPlace(b *testing.B) {
+	b.Run("Filter in-place to include strings shorter than 4 characters", func(b *testing.B) {
+		for i := 0; i < b.N; i++ {
+			slice := []string{"foo", "bar", "baz", "his", "her", "one", "log", "super",
+				"library", "functional function", "slice", "NOW", "hey"}
+
+			FilterInPlace(&slice, func(x string) bool { return len(x) < 4 })
+		}
 	})
 }

@@ -114,7 +114,7 @@ func Filter[T any](slice []T, filterFn func(T) bool) []T {
 	if slice == nil {
 		return nil
 	}
-	outSlice := make([]T, 0)
+	outSlice := make([]T, 0, len(slice))
 	for _, val := range slice {
 		if filterFn(val) {
 			outSlice = append(outSlice, val)
