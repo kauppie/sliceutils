@@ -1,6 +1,7 @@
 package sliceutils
 
 import (
+	"strconv"
 	"strings"
 	"testing"
 
@@ -229,6 +230,15 @@ func TestFilterMap(t *testing.T) {
 			return slen, slen < 4
 		})
 		assert.Equal(t, []int{3, 3, 3, 1}, filterMapped)
+	})
+
+	t.Run("Parse ints and discard failing strings", func(t *testing.T) {
+		slice := []string{"1", "2", "-3", "foo", "4", "n"}
+		filterMapped := FilterMap(slice, func(s string) (int, bool) {
+			value, err := strconv.Atoi(s)
+			return value, err == nil
+		})
+		assert.Equal(t, []int{1, 2, -3, 4}, filterMapped)
 	})
 
 	t.Run("Return nil on nil slice", func(t *testing.T) {
