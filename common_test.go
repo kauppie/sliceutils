@@ -191,6 +191,16 @@ func TestSliceDivGen(t *testing.T) {
 				},
 			},
 		},
+		{
+			name: "Length 5 and divs 1",
+			gen:  newSliceDivGen(5, 1),
+			expects: []expectedOut{
+				{
+					offset: 0,
+					length: 5,
+				},
+			},
+		},
 	}
 
 	for _, testCase := range testCases {

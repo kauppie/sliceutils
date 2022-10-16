@@ -26,6 +26,8 @@ type sliceDivGen struct {
 
 // Creates a new slice division generator. Takes parameter `length` as length
 // of the slice and `divs` as the number times to divide the slice.
+//
+// Panics if `divs` is zero.
 func newSliceDivGen(length, divs int) sliceDivGen {
 	return sliceDivGen{
 		minDivLen:     length / divs,
