@@ -143,6 +143,10 @@ It starts with a initial value and updates it iteratively using the argument fun
 
 Counts the number of occurrences for each element. Requires slice elements to be `comparable`.
 
+### >> _Generate_
+
+Generates a slice of the given length. Slice elements are generated using the provided argument function.
+
 ### >> _Intersection_
 
 Calculates a intersection set between two slice sets.

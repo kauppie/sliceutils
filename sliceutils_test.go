@@ -351,6 +351,18 @@ func TestFrequencies(t *testing.T) {
 	})
 }
 
+func TestGenerate(t *testing.T) {
+	t.Run("Generate slice with index as value", func(t *testing.T) {
+		slice := Generate(5, func(idx int) int { return idx })
+		assert.Equal(t, []int{0, 1, 2, 3, 4}, slice)
+	})
+
+	t.Run("Generate empty slice", func(t *testing.T) {
+		slice := Generate(0, func(idx int) int { return idx })
+		assert.Equal(t, []int{}, slice)
+	})
+}
+
 func TestIntersection(t *testing.T) {
 	t.Run("Intersection of two overlapping sets", func(t *testing.T) {
 		a := []int{1, 2, 3}
