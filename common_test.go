@@ -57,3 +57,149 @@ func TestZeroValue(t *testing.T) {
 		assert.Equal(t, emptyInterface, zeroVal)
 	})
 }
+
+func TestSliceDivGen(t *testing.T) {
+	type expectedOut struct {
+		offset int
+		length int
+	}
+
+	type testCase struct {
+		name    string
+		gen     sliceDivGen
+		expects []expectedOut
+	}
+
+	testCases := []testCase{
+		{
+			name: "Length 10 and divs 2",
+			gen:  newSliceDivGen(10, 2),
+			expects: []expectedOut{
+				{
+					offset: 0,
+					length: 5,
+				},
+				{
+					offset: 5,
+					length: 5,
+				},
+			},
+		},
+		{
+			name: "Length 10 and divs 3",
+			gen:  newSliceDivGen(10, 3),
+			expects: []expectedOut{
+				{
+					offset: 0,
+					length: 4,
+				},
+				{
+					offset: 4,
+					length: 3,
+				},
+				{
+					offset: 7,
+					length: 3,
+				},
+			},
+		},
+		{
+			name: "Length 10 and divs 4",
+			gen:  newSliceDivGen(10, 4),
+			expects: []expectedOut{
+				{
+					offset: 0,
+					length: 3,
+				},
+				{
+					offset: 3,
+					length: 3,
+				},
+				{
+					offset: 6,
+					length: 2,
+				},
+				{
+					offset: 8,
+					length: 2,
+				},
+			},
+		},
+		{
+			name: "Length 4 and divs 4",
+			gen:  newSliceDivGen(4, 4),
+			expects: []expectedOut{
+				{
+					offset: 0,
+					length: 1,
+				},
+				{
+					offset: 1,
+					length: 1,
+				},
+				{
+					offset: 2,
+					length: 1,
+				},
+				{
+					offset: 3,
+					length: 1,
+				},
+			},
+		},
+		{
+			name: "Length 1 and divs 4",
+			gen:  newSliceDivGen(1, 4),
+			expects: []expectedOut{
+				{
+					offset: 0,
+					length: 1,
+				},
+				{
+					offset: 1,
+					length: 0,
+				},
+				{
+					offset: 1,
+					length: 0,
+				},
+				{
+					offset: 1,
+					length: 0,
+				},
+			},
+		},
+		{
+			name: "Length 0 and divs 4",
+			gen:  newSliceDivGen(0, 4),
+			expects: []expectedOut{
+				{
+					offset: 0,
+					length: 0,
+				},
+				{
+					offset: 0,
+					length: 0,
+				},
+				{
+					offset: 0,
+					length: 0,
+				},
+				{
+					offset: 0,
+					length: 0,
+				},
+			},
+		},
+	}
+
+	for _, testCase := range testCases {
+		t.Run(testCase.name, func(t *testing.T) {
+			for i, expected := range testCase.expects {
+				offset, length := testCase.gen.get(i)
+				assert.Equal(t, expected.offset, offset)
+				assert.Equal(t, expected.length, length)
+			}
+		})
+	}
+}

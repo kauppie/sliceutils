@@ -498,7 +498,7 @@ func TestJoin(t *testing.T) {
 }
 
 func TestMap(t *testing.T) {
-	t.Run("Strings to their rune lengths", func(t *testing.T) {
+	t.Run("Map strings to their byte lengths", func(t *testing.T) {
 		slice := []string{"bar", "", "f", "hello", "world"}
 		lengths := Map(slice, func(s string) int { return len(s) })
 		assert.Equal(t, []int{3, 0, 1, 5, 5}, lengths)
@@ -703,5 +703,31 @@ func TestUnion(t *testing.T) {
 	t.Run("Return nil when both sets are nil", func(t *testing.T) {
 		union := Union[int](nil, nil)
 		assert.Nil(t, union)
+	})
+}
+
+////////////////////////
+// PARALLEL FUNCTIONS //
+////////////////////////
+
+func TestParMap(t *testing.T) {
+	t.Run("Increment int values by one in large array", func(t *testing.T) {
+		slice := Generate(1000, func(idx int) int { return idx })
+		assertSlice := Generate(1000, func(idx int) int { return idx + 1 })
+
+		outSlice := ParMap(slice, func(val int) int { return val + 1 })
+		assert.Equal(t, assertSlice, outSlice)
+	})
+
+	t.Run("Map strings to their byte lengths", func(t *testing.T) {
+		slice := []string{"bar", "", "f", "hello", "world"}
+		lengths := ParMap(slice, func(s string) int { return len(s) })
+		assert.Equal(t, []int{3, 0, 1, 5, 5}, lengths)
+	})
+
+	t.Run("Return nil on nil slice", func(t *testing.T) {
+		var slice []string = nil
+		outSlice := ParMap(slice, func(s string) int { return len(s) })
+		assert.Nil(t, outSlice)
 	})
 }
