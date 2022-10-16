@@ -14,3 +14,35 @@ func zeroValue[T any]() T {
 	var t T
 	return t
 }
+
+// Slice division generator is used to evenly divide a slice into sub-slices
+// which could be processed in parallel. All sub-slices are non-overlapping.
+type sliceDivGen struct {
+	// Minimum number of elements per division.
+	minDivLen int
+	// Number of divisions which have `minDivLen + 1` elements.
+	firstPartDivs int
+}
+
+// Creates a new slice division generator. Takes parameter `length` as length
+// of the slice and `divs` as the number times to divide the slice.
+func newSliceDivGen(length, divs int) sliceDivGen {
+	return sliceDivGen{
+		minDivLen:     length / divs,
+		firstPartDivs: length % divs,
+	}
+}
+
+// Gets the offset in the original slice and length of the sub-slice for given
+// sub-slice index.
+//
+// `divIdx` is expected to be less than the number of divisions.
+func (dsg sliceDivGen) get(divIdx int) (int, int) {
+	if divIdx < dsg.firstPartDivs {
+		offset := (dsg.minDivLen + 1) * divIdx
+		return offset, dsg.minDivLen + 1
+	} else {
+		offset := divIdx*dsg.minDivLen + dsg.firstPartDivs
+		return offset, dsg.minDivLen
+	}
+}
