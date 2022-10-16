@@ -79,7 +79,7 @@ for _, val := range slice {
 dedup := Deduplicate(slice)
 ```
 
-## List of all functions
+## List of functions
 
 ### >> _All_
 
@@ -206,6 +206,12 @@ Calculates a symmetric difference set from two slice sets.
 ### >> _Union_
 
 Calculates a union set from two slice sets.
+
+## List of parallel functions
+
+### >> _ParMap_
+
+Maps each element through argument function which can modify their type and/or value. Evenly distributes the mapping operation to multiple goroutines. The number of used goroutines is equal to the available number of logical processors.
 
 ## Performance
 

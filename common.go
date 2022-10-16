@@ -37,12 +37,12 @@ func newSliceDivGen(length, divs int) sliceDivGen {
 // sub-slice index.
 //
 // `divIdx` is expected to be less than the number of divisions.
-func (dsg sliceDivGen) get(divIdx int) (int, int) {
-	if divIdx < dsg.firstPartDivs {
-		offset := (dsg.minDivLen + 1) * divIdx
-		return offset, dsg.minDivLen + 1
+func (sdg sliceDivGen) get(divIdx int) (int, int) {
+	if divIdx < sdg.firstPartDivs {
+		offset := (sdg.minDivLen + 1) * divIdx
+		return offset, sdg.minDivLen + 1
 	} else {
-		offset := divIdx*dsg.minDivLen + dsg.firstPartDivs
-		return offset, dsg.minDivLen
+		offset := divIdx*sdg.minDivLen + sdg.firstPartDivs
+		return offset, sdg.minDivLen
 	}
 }
