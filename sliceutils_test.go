@@ -722,6 +722,62 @@ func TestUnion(t *testing.T) {
 // PARALLEL FUNCTIONS //
 ////////////////////////
 
+func TestParAll(t *testing.T) {
+	t.Run("All elements evaluate to true", func(t *testing.T) {
+		slice := []int{1, 4, 6, 2, 3, 7}
+		allPositive := ParAll(slice, func(i int) bool { return i > 0 })
+		assert.True(t, allPositive)
+	})
+
+	t.Run("Some elements don't evaluate to true", func(t *testing.T) {
+		slice := []int{1, 4, 6, -2, 3, 7}
+		allPositive := ParAll(slice, func(i int) bool { return i > 0 })
+		assert.False(t, allPositive)
+	})
+
+	t.Run("An element evaluates to false on large array", func(t *testing.T) {
+		slice := Generate(1000, func(idx int) int { return idx + 1 })
+		slice[500] = 0
+
+		allPositive := ParAll(slice, func(i int) bool { return i > 0 })
+		assert.False(t, allPositive)
+	})
+
+	t.Run("Return true on nil slice", func(t *testing.T) {
+		var slice []int = nil
+		allPositive := ParAll(slice, func(i int) bool { return i > 0 })
+		assert.True(t, allPositive)
+	})
+}
+
+func TestParAny(t *testing.T) {
+	t.Run("Some elements evaluate to true", func(t *testing.T) {
+		slice := []int{-1, -4, 6, -2, 3, 7}
+		anyPositive := ParAny(slice, func(i int) bool { return i > 0 })
+		assert.True(t, anyPositive)
+	})
+
+	t.Run("All elements evaluate to false", func(t *testing.T) {
+		slice := []int{-1, -4, -6, -2, -3, -7}
+		anyPositive := ParAny(slice, func(i int) bool { return i > 0 })
+		assert.False(t, anyPositive)
+	})
+
+	t.Run("An element evaluates to true on large array", func(t *testing.T) {
+		slice := Generate(1000, func(idx int) int { return idx + 1 })
+		slice[500] = 0
+
+		anyPositive := ParAny(slice, func(i int) bool { return i == 0 })
+		assert.True(t, anyPositive)
+	})
+
+	t.Run("Return false on nil slice", func(t *testing.T) {
+		var slice []int = nil
+		anyPositive := ParAny(slice, func(i int) bool { return i > 0 })
+		assert.False(t, anyPositive)
+	})
+}
+
 func TestParMap(t *testing.T) {
 	t.Run("Increment int values by one in large array", func(t *testing.T) {
 		slice := Generate(1000, func(idx int) int { return idx })

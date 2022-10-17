@@ -206,7 +206,7 @@ func TestSliceDivGen(t *testing.T) {
 	for _, testCase := range testCases {
 		t.Run(testCase.name, func(t *testing.T) {
 			for i, expected := range testCase.expects {
-				offset, length := testCase.gen.get(i)
+				offset, length := testCase.gen.offsetAndLength(i)
 				assert.Equal(t, expected.offset, offset)
 				assert.Equal(t, expected.length, length)
 			}

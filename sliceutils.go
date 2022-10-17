@@ -3,6 +3,7 @@ package sliceutils
 import (
 	"runtime"
 	"sync"
+	"sync/atomic"
 )
 
 // Returns true if all slice elements are evaluated true with given evaluator
@@ -488,6 +489,70 @@ func Union[T comparable](lhs, rhs []T) []T {
 // PARALLEL FUNCTIONS //
 ////////////////////////
 
+// Returns true if all slice elements are evaluated to true with given
+// evaluator function. Slice processing is divided evenly to number of
+// goroutines.
+//
+// Returns as soon as element evaluating to `false` is found e.g. function is
+// short-circuiting.
+//
+// Order of evaluations is undefined and shall not be depended on. Returns true
+// on nil slice. Panics on nil evaluator function.
+func ParAll[T any](slice []T, allFn func(T) bool) bool {
+	// Divide slice by the number of logical CPUs.
+	divs := runtime.NumCPU()
+	sliceDivGen := newSliceDivGen(len(slice), divs)
+
+	// Create a waitgroup for waiting goroutines to finish.
+	var wg sync.WaitGroup
+	wg.Add(divs)
+
+	// Initialize result flag.
+	var allFlag atomic.Bool
+	allFlag.Store(true)
+
+	// Loop over all divisions.
+	for divIdx := 0; divIdx < divs; divIdx++ {
+		// Start goroutine for processing a sub-slice.
+		go func(divIdx int) {
+			// Notify goroutine has finished in the end.
+			defer wg.Done()
+
+			// Loop over sub-slice and check if `false` element is found.
+			// Checking flag after every iteration allows early termination with O(n)
+			// execution time instead of Θ(n).
+			// Question still exists whether the flag is worth checking after every
+			// iteration or some variable N amount of iterations.
+			start, end := sliceDivGen.startAndEnd(divIdx)
+			for i := start; i < end && allFlag.Load(); i++ {
+				if !allFn(slice[i]) {
+					// `false` element was found. Stop processing the slice.
+					allFlag.Store(false)
+					return
+				}
+			}
+		}(divIdx)
+	}
+	// Wait until all goroutines have finished.
+	wg.Wait()
+
+	// Return result.
+	return allFlag.Load()
+}
+
+// Returns true if any slice element is evaluated to true with given
+// evaluator function. Slice processing may be divided to number of goroutines.
+//
+// Returns as soon as element evaluating to `true` is found e.g. function is
+// short-circuiting.
+//
+// Order of evaluations is undefined and shall not be depended on. Returns false
+// on nil slice. Panics on nil evaluator function.
+func ParAny[T any](slice []T, anyFn func(T) bool) bool {
+	// Call ParAll just inverting all results.
+	return !ParAll(slice, func(val T) bool { return !anyFn(val) })
+}
+
 // Maps each slice value with a mapping function and divides the slice by the
 // number of logical processors to evenly distribute work.
 //
@@ -510,16 +575,15 @@ func ParMap[T, U any](slice []T, mapFn func(T) U) []U {
 	var wg sync.WaitGroup
 	wg.Add(divs)
 
-	// Loop all divisions
+	// Loop over all divisions.
 	for divIdx := 0; divIdx < divs; divIdx++ {
 		// Start goroutine for mapping a sub-slice.
 		go func(divIdx int) {
 			// Notify goroutine has finished mapping in the end.
 			defer wg.Done()
 
-			// Get division specific offset and length for the sub-slice.
-			offset, length := sliceDivGen.get(divIdx)
-			start, end := offset, offset+length
+			// Get division specific start and end indexes for the sub-slice.
+			start, end := sliceDivGen.startAndEnd(divIdx)
 
 			// Map.
 			mappedSubSlice := Map(slice[start:end], mapFn)
