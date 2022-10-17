@@ -7,7 +7,7 @@
 
 This library implements several high-level functions useful for interacting with slices. It reduces boilerplate required by for-loops and variable initializations.
 
-Library takes advantage of Go generics increasing usability by compile-time type-safety. Go version of at least **1.18** is therefore required.
+Go version of at least **1.19** is required.
 
 ## Examples
 
@@ -83,11 +83,11 @@ dedup := Deduplicate(slice)
 
 ### >> _All_
 
-Returns `true` if all slice elements are evaluated `true` with given argument function.
+Returns `true` if all slice elements are evaluated to `true` with given argument function.
 
 ### >> _Any_
 
-Returns `true` if any slice element is evaluated `true` with given argument function.
+Returns `true` if any slice element evaluates to `true` with given argument function.
 
 ### >> _AreDisjoint_
 
@@ -212,6 +212,14 @@ Calculates a symmetric difference set from two slice sets.
 Calculates a union set from two slice sets.
 
 ## List of parallel functions
+
+### >> _ParAll_
+
+Returns `true` if all slice elements are evaluated to `true` with given argument function. Evaluation may be performed in parallel if system has multiple logical CPUs.
+
+### >> _ParAny_
+
+Returns `true` if any slice element evaluates to `true` with given argument function. Evaluation may be performed in parallel if system has multiple logical CPUs.
 
 ### >> _ParMap_
 

@@ -39,7 +39,7 @@ func newSliceDivGen(length, divs int) sliceDivGen {
 // sub-slice index.
 //
 // `divIdx` is expected to be less than the number of divisions.
-func (sdg sliceDivGen) get(divIdx int) (int, int) {
+func (sdg sliceDivGen) offsetAndLength(divIdx int) (int, int) {
 	if divIdx < sdg.firstPartDivs {
 		offset := (sdg.minDivLen + 1) * divIdx
 		return offset, sdg.minDivLen + 1
@@ -47,4 +47,12 @@ func (sdg sliceDivGen) get(divIdx int) (int, int) {
 		offset := divIdx*sdg.minDivLen + sdg.firstPartDivs
 		return offset, sdg.minDivLen
 	}
+}
+
+// Gets start and end indexes in the original slice for given sub-slice index.
+//
+// `divIdx` is expected to be less than the number of divisions.
+func (sdg sliceDivGen) startAndEnd(divIdx int) (int, int) {
+	offset, length := sdg.offsetAndLength(divIdx)
+	return offset, offset + length
 }
